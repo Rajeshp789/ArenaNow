@@ -1,14 +1,21 @@
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
-// import LoginScreen from './src/screens/auth/loginScreen';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
+import HomeScreen from './src/screens/home/HomeScreen';
+import LoginScreen from './src/screens/auth/LoginScreen';
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <>
-      {/* <SafeAreaView>
-        <LoginScreen />
-      </SafeAreaView> */}
-      <Text> Here we gooooo....... </Text>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Home">
+          <Stack.Screen name='Home' component={HomeScreen} />
+          <Stack.Screen name='Login' component={LoginScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
     </>
 
   )
