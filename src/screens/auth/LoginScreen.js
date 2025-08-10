@@ -1,6 +1,10 @@
 import { CommonActions } from "@react-navigation/native";
 import React, { useState } from "react";
 import { TextInput, View, Button, Text, StyleSheet, TouchableOpacity } from "react-native";
+import AxiosInstance from "../../api/axiosInstance";
+import axios from "axios";
+import * as SecureStore from 'expo-secure-store';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 export default function LoginScreen({ navigation }) {
@@ -28,6 +32,7 @@ export default function LoginScreen({ navigation }) {
         }
     }
 
+    // Validation function for validatiing fields
     const validateFields = () => {
         const newErrors = {};
 
@@ -47,8 +52,10 @@ export default function LoginScreen({ navigation }) {
         return newErrors;
     }
 
-    const handleSubmit = () => {
+    // Submit Function
+    const handleSubmit = async () => {
 
+        // Validation function call
         const errors = validateFields();
 
         if (Object.keys(errors).length > 0) {
@@ -57,10 +64,35 @@ export default function LoginScreen({ navigation }) {
         }
 
         console.log(formData);
+
+        // API call
+        try {
+            const response = await AxiosInstance.post("/auth/user_Login", formData);
+            console.log("Login success:", response.data);
+
+            if (response.data.AccessToken) {
+                await AsyncStorage.setItem("accessToken", response.data.AccessToken);
+            }
+            if (response.data.RefreshToken) {
+                await SecureStore.setItemAsync("refreshToken", response.data.RefreshToken);
+            }
+
+            // Navigate to home
+            navigation.dispatch(
+                CommonActions.reset({
+                    index: 0,
+                    routes: [{ name: 'Home' }],
+                })
+            );
+
+        } catch (error) {
+            console.log("Login Failed", error);
+        }
     }
 
     return (
         <>
+            {/* Login Fields */}
             <View style={styles.container}>
                 <Text style={styles.loginTitle}> Login </Text>
                 <TextInput style={styles.input}
@@ -89,6 +121,7 @@ export default function LoginScreen({ navigation }) {
                     <Text style={styles.buttonText}>Button</Text>
                 </TouchableOpacity>
 
+                {/* Calling submit function */}
                 <TouchableOpacity style={styles.button}
                     onPress={handleSubmit}
                 >
@@ -99,6 +132,7 @@ export default function LoginScreen({ navigation }) {
     );
 };
 
+// Style Classes
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -106,12 +140,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     loginTitle: {
-        fontSize: 30,
+        fontSize: 35,
         fontWeight: 'bold',
         marginBottom: 10
     },
     input: {
-        height: 40,
+        height: 45,
         width: 250,
         borderWidth: 1.2,
         marginBottom: 10,
