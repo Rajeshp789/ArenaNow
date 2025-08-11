@@ -5,6 +5,7 @@ import AxiosInstance from "../../api/axiosInstance";
 import axios from "axios";
 import * as SecureStore from 'expo-secure-store';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { resetTo } from "../../navigation/NavigationService";
 
 
 export default function LoginScreen({ navigation }) {
@@ -70,6 +71,7 @@ export default function LoginScreen({ navigation }) {
             const response = await AxiosInstance.post("/auth/user_Login", formData);
             console.log("Login success:", response.data);
 
+            // Storing refreshToken and accessToken
             if (response.data.AccessToken) {
                 await AsyncStorage.setItem("accessToken", response.data.AccessToken);
             }
@@ -78,12 +80,7 @@ export default function LoginScreen({ navigation }) {
             }
 
             // Navigate to home
-            navigation.dispatch(
-                CommonActions.reset({
-                    index: 0,
-                    routes: [{ name: 'Home' }],
-                })
-            );
+            resetTo('Home');
 
         } catch (error) {
             console.log("Login Failed", error);
@@ -104,6 +101,7 @@ export default function LoginScreen({ navigation }) {
 
                 <TextInput style={styles.input}
                     inputMode="text"
+                    keyboardType="password"
                     placeholder="Enter Password"
                     value={formData.loginPassword}
                     onChangeText={(text) => handleInput('loginPassword', text)}
@@ -111,12 +109,7 @@ export default function LoginScreen({ navigation }) {
                 {errors.loginPassword && <Text>{errors.loginPassword}</Text>}
 
                 <TouchableOpacity style={styles.button}
-                    onPress={() => navigation.dispatch(
-                        CommonActions.reset({
-                            index: 0,
-                            routes: [{ name: 'Home' }],
-                        })
-                    )}
+                    onPress={() => resetTo('Home')}
                 >
                     <Text style={styles.buttonText}>Button</Text>
                 </TouchableOpacity>
