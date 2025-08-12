@@ -66,23 +66,14 @@ export default function LoginScreen({ navigation }) {
 
         console.log(formData);
 
-        // API call
+        // API call from authContext
         try {
-            const response = await AxiosInstance.post("/auth/user_Login", formData);
-            console.log("Login success:", response.data);
-
-            // Storing refreshToken and accessToken
-            if (response.data.AccessToken) {
-                await AsyncStorage.setItem("accessToken", response.data.AccessToken);
-            }
-            if (response.data.RefreshToken) {
-                await SecureStore.setItemAsync("refreshToken", response.data.RefreshToken);
-            }
+            await Login(formData);
 
             // Navigate to home
             resetTo('Home');
-
-        } catch (error) {
+        }
+        catch (error) {
             console.log("Login Failed", error);
         }
     }
