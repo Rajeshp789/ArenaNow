@@ -1,14 +1,12 @@
-import { CommonActions } from "@react-navigation/native";
 import React, { useState } from "react";
 import { TextInput, View, Button, Text, StyleSheet, TouchableOpacity } from "react-native";
-import AxiosInstance from "../../api/axiosInstance";
-import axios from "axios";
-import * as SecureStore from 'expo-secure-store';
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { resetTo } from "../../navigation/NavigationService";
-
+import { useAuth } from "../../context/authContext";
 
 export default function LoginScreen({ navigation }) {
+
+    // Getting AuthContext functions
+    const { Login } = useAuth();
 
     // Creating useState variables
     const [formData, setFormData] = useState({
@@ -88,7 +86,7 @@ export default function LoginScreen({ navigation }) {
                     value={formData.loginEmail}
                     onChangeText={(text) => handleInput('loginEmail', text)}
                 />
-                {errors.loginEmail && <Text>{errors.loginEmail}</Text>}
+                {errors.loginEmail && <Text style={styles.errorText}>{errors.loginEmail}</Text>}
 
                 <TextInput style={styles.input}
                     inputMode="text"
@@ -97,7 +95,7 @@ export default function LoginScreen({ navigation }) {
                     value={formData.loginPassword}
                     onChangeText={(text) => handleInput('loginPassword', text)}
                 />
-                {errors.loginPassword && <Text>{errors.loginPassword}</Text>}
+                {errors.loginPassword && <Text style={styles.errorText}>{errors.loginPassword}</Text>}
 
                 <TouchableOpacity style={styles.button}
                     onPress={() => resetTo('Home')}
@@ -148,6 +146,10 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 16,
         fontWeight: 'bold',
+    },
+    errorText: {
+        color: '#f5174eff',
+        fontWeight: 'bold'
     }
 
 });

@@ -1,9 +1,16 @@
 import React from 'react';
 import { View, Text, Button, StyleSheet, TouchableOpacity } from 'react-native';
-import { EXPO_API_BACKEND_URL } from '@env';
 import AxiosInstance from '../../api/axiosInstance';
+import { useAuth } from '../../context/authContext';
+
 
 export default function HomeScreen({ navigation }) {
+
+    // Getting AuthContext variable
+    const { isAuthenticated, Logout } = useAuth();
+
+    console.log(isAuthenticated);
+
     const apiCall = async () => {
         try {
             const response = await AxiosInstance.get("/auth/tesAPI");
@@ -18,12 +25,20 @@ export default function HomeScreen({ navigation }) {
             {/* Home Screen */}
             <View style={styles.container}>
                 <Text style={styles.homeTitle}>Home Screen</Text>
-                <TouchableOpacity style={styles.button}
-                    title="Go to Login"
-                    onPress={() => navigation.navigate('Login')}
-                >
-                    <Text style={styles.buttonText}> Login </Text>
-                </TouchableOpacity>
+
+                {isAuthenticated ?
+                    <TouchableOpacity style={styles.button}
+                        onPress={Logout}
+                    >
+                        <Text style={styles.buttonText}> Logout </Text>
+                    </TouchableOpacity>
+                    :
+                    <TouchableOpacity style={styles.button}
+                        onPress={() => navigation.navigate('Login')}
+                    >
+                        <Text style={styles.buttonText}> Login </Text>
+                    </TouchableOpacity>
+                }
                 <TouchableOpacity style={styles.button}
                     title="SECURE API CALL"
                     onPress={apiCall}

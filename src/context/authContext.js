@@ -1,4 +1,7 @@
 import React, { createContext, useContext, useState } from "react";
+import AxiosInstance from "../api/axiosInstance";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from 'expo-secure-store';
 
 const AuthContext = createContext();
 
@@ -35,15 +38,24 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
-    const Logout = () => {
+    // Logout function
+    const Logout = async () => {
         try {
 
-        } catch (error) {
+            await AsyncStorage.removeItem("accessToken");
+            await SecureStore.deleteItemAsync("refreshToken");
 
+            setIsAuthenticated(false);
+
+            // Navigate user to Login screen 
+            resetTo("Login");
+
+        } catch (error) {
+            throw error;
         }
     }
     return (
-        <AuthContext.Provider value={Login}>
+        <AuthContext.Provider value={{ isAuthenticated, accessToken, Login, Logout }}>
             {children}
         </AuthContext.Provider>
     )
