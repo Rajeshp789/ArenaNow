@@ -8,6 +8,7 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [accessToken, setAccessToken] = useState(null);
+    const [userData, setUserData] = useState(null);
 
     const Login = async (formData) => {
         try {
@@ -30,11 +31,17 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
-    const FetchUser = () => {
+    // Fetch Userdata 
+    const FetchUser = async () => {
         try {
 
-        } catch (error) {
+            const response = await AxiosInstance.get("/auth/fetch_UserData");
+            console.log("User data:", response.data);
+            setUserData(response.data);
+            return response.data;
 
+        } catch (error) {
+            throw error;
         }
     }
 
@@ -55,7 +62,7 @@ export const AuthProvider = ({ children }) => {
         }
     }
     return (
-        <AuthContext.Provider value={{ isAuthenticated, accessToken, Login, Logout }}>
+        <AuthContext.Provider value={{ isAuthenticated, accessToken, Login, Logout, FetchUser }}>
             {children}
         </AuthContext.Provider>
     )
