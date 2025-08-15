@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, Button, StyleSheet, TouchableOpacity } from 'react-native';
-import AxiosInstance from '../../api/axiosInstance';
-import { useAuth } from '../../context/authContext';
+import AxiosInstance from '../../api/AxiosInstance';
+import { useAuth } from '../../context/AuthContext';
 
 
 export default function HomeScreen({ navigation }) {
@@ -26,27 +26,25 @@ export default function HomeScreen({ navigation }) {
             <View style={styles.container}>
                 <Text style={styles.homeTitle}>Home Screen</Text>
 
-                {isAuthenticated ?
+                {isAuthenticated ? (
                     <TouchableOpacity style={styles.button}
                         onPress={Logout}
                     >
                         <Text style={styles.buttonText}> Logout </Text>
                     </TouchableOpacity>
-                    :
+                ) : (
                     <TouchableOpacity style={styles.button}
                         onPress={() => navigation.navigate('Login')}
                     >
                         <Text style={styles.buttonText}> Login </Text>
                     </TouchableOpacity>
-                }
+                )}
                 <TouchableOpacity style={styles.button}
-                    title="SECURE API CALL"
                     onPress={apiCall}
                 >
                     <Text style={styles.buttonText}> API Call </Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.button}
-                    title="SECURE API CALL"
                     onPress={() => navigation.navigate('Register')}
                 >
                     <Text style={styles.buttonText}> Register </Text>

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
-import AxiosInstance from "../api/axiosInstance";
+import AxiosInstance from "../api/AxiosInstance";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SecureStore from 'expo-secure-store';
 

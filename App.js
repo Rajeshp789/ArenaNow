@@ -1,25 +1,15 @@
-import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
-import HomeScreen from './src/screens/home/HomeScreen';
-import LoginScreen from './src/screens/auth/LoginScreen';
 import { navigationRef } from './src/navigation/NavigationService';
-import RegisterScreen from './src/screens/auth/RegisterScreen';
-import { AuthProvider } from './src/context/authContext';
-
-const Stack = createNativeStackNavigator();
+import { AuthProvider } from './src/context/AuthContext';
+import AppNavigator from './src/navigation/AppNavigator';
 
 export default function App() {
   return (
     <>
       <AuthProvider>
         <NavigationContainer ref={navigationRef}>
-          <Stack.Navigator initialRouteName="Home">
-            <Stack.Screen name='Home' component={HomeScreen} />
-            <Stack.Screen name='Login' component={LoginScreen} />
-            <Stack.Screen name='Register' component={RegisterScreen} />
-          </Stack.Navigator>
+          <AppNavigator />
         </NavigationContainer>
       </AuthProvider>
     </>

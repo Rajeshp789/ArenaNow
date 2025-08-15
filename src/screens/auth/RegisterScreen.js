@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-import AxiosInstance from "../../api/axiosInstance";
+import AxiosInstance from "../../api/AxiosInstance";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SecureStore from 'expo-secure-store';
 import { resetTo } from "../../navigation/NavigationService";

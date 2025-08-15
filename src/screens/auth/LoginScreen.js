@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { TextInput, View, Button, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { resetTo } from "../../navigation/NavigationService";
-import { useAuth } from "../../context/authContext";
+import { useAuth } from "../../context/AuthContext";
 
 export default function LoginScreen({ navigation }) {
 
