@@ -7,9 +7,9 @@ import { useAuth } from '../../context/AuthContext';
 export default function HomeScreen({ navigation }) {
 
     // Getting AuthContext variable
-    const { isAuthenticated, Logout } = useAuth();
+    const { authStatus, Logout } = useAuth();
 
-    console.log(isAuthenticated);
+    console.log(authStatus);
 
     const apiCall = async () => {
         try {
@@ -26,19 +26,22 @@ export default function HomeScreen({ navigation }) {
             <View style={styles.container}>
                 <Text style={styles.homeTitle}>Home Screen</Text>
 
-                {isAuthenticated ? (
-                    <TouchableOpacity style={styles.button}
-                        onPress={Logout}
-                    >
-                        <Text style={styles.buttonText}> Logout </Text>
-                    </TouchableOpacity>
-                ) : (
-                    <TouchableOpacity style={styles.button}
+                {authStatus === "Guest" ? (
+                    < TouchableOpacity style={styles.button}
                         onPress={() => navigation.navigate('Login')}
                     >
                         <Text style={styles.buttonText}> Login </Text>
                     </TouchableOpacity>
+
+                ) : authStatus === "Authenticated"(
+                    < TouchableOpacity style={styles.button}
+                        onPress={Logout}
+                    >
+                        <Text style={styles.buttonText}> Logout </Text>
+                    </TouchableOpacity>
+
                 )}
+
                 <TouchableOpacity style={styles.button}
                     onPress={apiCall}
                 >
@@ -49,7 +52,7 @@ export default function HomeScreen({ navigation }) {
                 >
                     <Text style={styles.buttonText}> Register </Text>
                 </TouchableOpacity>
-            </View>
+            </View >
         </>
     );
 };

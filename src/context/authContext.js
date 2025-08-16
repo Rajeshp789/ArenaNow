@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import AxiosInstance from "../api/AxiosInstance";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SecureStore from 'expo-secure-store';
@@ -6,9 +6,26 @@ import * as SecureStore from 'expo-secure-store';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [authStatus, setAuthStatus] = useState("Guest");
     const [accessToken, setAccessToken] = useState(null);
     const [userData, setUserData] = useState(null);
+
+    useEffect(() => {
+        const restoreSession = async () => {
+            const storedAccessToken = await AsyncStorage.getItem("accessToken");
+            const storedRefreshToken = await SecureStore.getItemAsync("refreshToken");
+
+            if (storedAccessToken && storedRefreshToken) {
+                setAccessToken(storedAccessToken);
+                setAuthStatus("Authenticated");
+                await FetchUser();
+            } else {
+                setAuthStatus("Guest");
+                setUserData(null);
+            }
+        };
+        restoreSession();
+    }, []);
 
     const Login = async (formData) => {
         try {
@@ -24,8 +41,10 @@ export const AuthProvider = ({ children }) => {
                 await SecureStore.setItemAsync("refreshToken", response.data.RefreshToken);
             }
 
-            setIsAuthenticated(true);
+            setAuthStatus("Authenticated");
+            await FetchUser();
             return true;
+
         } catch (error) {
             throw error;
         }
@@ -38,9 +57,16 @@ export const AuthProvider = ({ children }) => {
             const response = await AxiosInstance.get("/auth/fetch_UserData");
             console.log("User data:", response.data);
             setUserData(response.data);
+            setAuthStatus("Authenticated")
             return response.data;
 
         } catch (error) {
+
+            if (error.response?.status === 401) {
+                setAuthStatus("Guest");
+                setUser(null);
+            }
+
             throw error;
         }
     }
@@ -52,8 +78,8 @@ export const AuthProvider = ({ children }) => {
             await AsyncStorage.removeItem("accessToken");
             await SecureStore.deleteItemAsync("refreshToken");
 
-            setIsAuthenticated(false);
-
+            setAuthStatus("Guest");
+            setUserData(null);
             // Navigate user to Login screen 
             resetTo("Login");
 
@@ -62,7 +88,7 @@ export const AuthProvider = ({ children }) => {
         }
     }
     return (
-        <AuthContext.Provider value={{ isAuthenticated, accessToken, Login, Logout, FetchUser }}>
+        <AuthContext.Provider value={{ authStatus, accessToken, userData, Login, Logout, FetchUser }}>
             {children}
         </AuthContext.Provider>
     )
