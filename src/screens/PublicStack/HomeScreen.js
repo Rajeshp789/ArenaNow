@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import AxiosInstance from '../../api/AxiosInstance';
 import { useAuth } from '../../context/AuthContext';
+import { EXPO_API_BACKEND_URL } from "@env";
 
 
 export default function HomeScreen({ navigation }) {
@@ -24,7 +25,7 @@ export default function HomeScreen({ navigation }) {
         <>
             {/* Home Screen */}
             <View style={styles.container}>
-                <Text style={styles.homeTitle}>Home Screen</Text>
+                <Text style={styles.homeTitle}>Home Screen {EXPO_API_BACKEND_URL}</Text>
 
                 {authStatus === "Guest" ? (
                     < TouchableOpacity style={styles.button}
@@ -33,14 +34,14 @@ export default function HomeScreen({ navigation }) {
                         <Text style={styles.buttonText}> Login </Text>
                     </TouchableOpacity>
 
-                ) : authStatus === "Authenticated"(
+                ) : authStatus === "Authenticated" ? (
                     < TouchableOpacity style={styles.button}
                         onPress={Logout}
                     >
                         <Text style={styles.buttonText}> Logout </Text>
                     </TouchableOpacity>
 
-                )}
+                ): null}
 
                 <TouchableOpacity style={styles.button}
                     onPress={apiCall}

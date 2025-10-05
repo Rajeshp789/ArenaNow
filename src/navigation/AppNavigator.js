@@ -13,7 +13,7 @@ export default function AppNavigator() {
         <Stack.Navigator screenOptions={{ headerShown: false }} >
             {authStatus === "Guest" ? (
                 <Stack.Screen name="Public" component={PublicStack} />
-            ) : authStatus === "Authenticating" ? (
+            ) : authStatus === "Auth" ? (
                 <Stack.Screen name="Auth" component={AuthStack} />
             ) : (
                 <Stack.Screen name="App" component={AppStack} />
